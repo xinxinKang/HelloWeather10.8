@@ -150,6 +150,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     /*
     * 解析XML
     * */
+    
     private	TodayWeather parseXML(String xmldata) {
         TodayWeather	todayWeather	=	null;
         int fengxiangCount = 0;
