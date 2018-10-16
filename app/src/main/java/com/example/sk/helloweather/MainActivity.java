@@ -50,22 +50,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceStates);
         setContentView(R.layout.weather_info);
 
-        if(NetUtil.getNetworkState(this)!=NetUtil.NETWORN_NONE){
-            Log.d("myWeather","网络OK");
-            Toast.makeText(MainActivity.this,"网络OK", Toast.LENGTH_LONG).show();
-        }
-        else{
-            Log.d("myWeather","网络notOK");
-            Toast.makeText(MainActivity.this,"网络notOK", Toast.LENGTH_LONG).show();
-        }
+        mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn);
+        mUpdateBtn.setOnClickListener(this);
+
+//        if(NetUtil.getNetworkState(this)!=NetUtil.NETWORN_NONE){
+//            Log.d("myWeather","网络OK");
+//            Toast.makeText(MainActivity.this,"网络OK", Toast.LENGTH_LONG).show();
+//        }
+//        else{
+//            Log.d("myWeather","网络notOK");
+//            Toast.makeText(MainActivity.this,"网络notOK", Toast.LENGTH_LONG).show();
+//        }
         initView();
     }
     @Override
     public  void onClick(View view){
         if(view.getId()==R.id.title_update_btn){
+
             SharedPreferences sharedPreferences = getSharedPreferences("config",MODE_PRIVATE);
             String cityCode = sharedPreferences.getString("main_city_code","101010100");
             Log.d("myWeather",cityCode);
+
             if (NetUtil.getNetworkState(this)!=	NetUtil.NETWORN_NONE)	{
                 Log.d("myWeather",	"网络OK");
                 queryWeatherCode(cityCode);
@@ -105,11 +110,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
      * city code
      * */
     private void queryWeatherCode(String cityCode) {
-        final String address = "http://wthrcdn.etouch.cn/Weather Api?citykey=" + cityCode;
+        final String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + cityCode;
         Log.d("myWeather", address);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 HttpURLConnection con = null;
                 TodayWeather todayWeather = null;
                 try {
@@ -118,10 +125,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     con.setRequestMethod("GET");
                     con.setConnectTimeout(8000);
                     con.setReadTimeout(8000);
+
                     InputStream in = con.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     StringBuilder response = new StringBuilder();
                     String str;
+
                     while ((str = reader.readLine()) != null) {
                         response.append(str);
                         Log.d("myWeather", str);
@@ -139,6 +148,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    String se = e.toString();
+                    Log.d("myWeather", se);
                 } finally {
                     if (con != null) {
                         con.disconnect();
@@ -150,7 +161,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     /*
     * 解析XML
     * */
-    
+
     private	TodayWeather parseXML(String xmldata) {
         TodayWeather	todayWeather	=	null;
         int fengxiangCount = 0;
