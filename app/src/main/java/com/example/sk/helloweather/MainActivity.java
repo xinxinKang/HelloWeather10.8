@@ -187,7 +187,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             todayWeather=new TodayWeather();
                         }
                         if(null!=todayWeather){
-                        if(xmlPullParser.getName().equals("city "))	{
+                        if(xmlPullParser.getName().equals("city"))	{
                             eventType	=	xmlPullParser.next();
                             todayWeather.setCity(xmlPullParser.getText());
                             Log.d("myWeather",	"city:	"+xmlPullParser.getText());
