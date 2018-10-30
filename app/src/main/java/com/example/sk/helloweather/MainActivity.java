@@ -1,10 +1,12 @@
 package com.example.sk.helloweather;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.service.autofill.Validator;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +32,7 @@ import sk.util.NetUtil;
 public class MainActivity extends Activity implements View.OnClickListener {
     private	static	final	int	UPDATE_TODAY_WEATHER	=	1;
     private ImageView mUpdateBtn;
+    private ImageView mCitySelect;
     private TextView cityTv,	timeTv,	humidityTv,	weekTv,	pmDataTv,
             pmQualityTv,
             temperatureTv,	climateTv,	windTv,	city_name_Tv;
@@ -61,17 +64,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //            Log.d("myWeather","网络notOK");
 //            Toast.makeText(MainActivity.this,"网络notOK", Toast.LENGTH_LONG).show();
 //        }
+        mCitySelect=(ImageView)findViewById(R.id.title_city_manager);
+        mCitySelect.setOnClickListener(this);
         initView();
     }
     @Override
     public  void onClick(View view){
+        if(view.getId()==R.id.title_city_manager){
+            Intent i=new Intent(this,SelectCity.class);
+            startActivity(i);
+        }
         if(view.getId()==R.id.title_update_btn){
-
+//            Log.d("myWeather","button");
             SharedPreferences sharedPreferences = getSharedPreferences("config",MODE_PRIVATE);
             String cityCode = sharedPreferences.getString("main_city_code","101010100");
             Log.d("myWeather",cityCode);
 
             if (NetUtil.getNetworkState(this)!=	NetUtil.NETWORN_NONE)	{
+
                 Log.d("myWeather",	"网络OK");
                 queryWeatherCode(cityCode);
                 Toast.makeText(MainActivity.this,"网络OK", Toast.LENGTH_LONG).show();
@@ -178,6 +188,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             int	eventType	=	xmlPullParser.getEventType();
             Log.d("myWeather",	"parseXML");
             while	(eventType	!=	XmlPullParser.END_DOCUMENT)	{
+                Log.d("myWeather",	"ff");
+
                 switch	(eventType) {
                     //	判断当前事件是否为文档开始事件
                     case XmlPullParser.START_DOCUMENT:
